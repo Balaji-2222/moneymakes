@@ -20,30 +20,22 @@ const transactionTypeOptions = [
 ]
 
 class MoneyManager extends Component {
-  state = {list: [], title: '', amount: '', type: '', income: 0, expenses: 0}
+  state = {list: [], title: '', amount: '', typex: '', income: 0, expenses: 0}
 
   personDetails = event => {
     event.preventDefault()
-    const {title, amount, type, income, expenses, list} = this.state
+    const {title, amount, typex, income, expenses, list} = this.state
+
     const newList = {
       title,
       amount,
-      type,
+      typex,
       id: uuidv4(),
     }
-    if (type === 'Income') {
-      this.setState(prevState => ({
-        list: [...prevState.list, newList],
-        amount: prevState.amount + amount,
-        income: prevState.income + income,
-      }))
-    } else if (type === 'Expenses') {
-      this.setState(prevState => ({
-        list: [...prevState.list, newList],
-        amount: prevState.amount + amount,
-        expenses: prevState.expenses + expenses,
-      }))
-    }
+    this.setState(prevState => ({
+      list: [...prevState.list, newList],
+      amount: parseInt(prevState.amount) + parseInt(amount),
+    }))
   }
 
   changeTitle = event => {
@@ -55,16 +47,15 @@ class MoneyManager extends Component {
   }
 
   typeDaily = event => {
-    this.setState({type: event.target.value})
+    this.setState({typex: event.target.value})
   }
 
   render() {
     const {list} = this.state
-    const {amount, income, expenses, type} = this.state
-    console.log(amount)
-    console.log(expenses)
+    const {amount, income, expenses, typex} = this.state
+    console.log(list)
     return (
-      <div className="bgContainer">
+      <form className="bgContainer" onSubmit={this.personDetails}>
         <div className="firstContainer">
           <h1 className="firstHeading">Hi, Richard</h1>
           <p className="firstParagraph">
@@ -76,10 +67,10 @@ class MoneyManager extends Component {
             amount={amount}
             income={income}
             expenses={expenses}
-            type={type}
+            typex={typex}
           />
         </ul>
-        <form className="entryCard" onChange={this.personDetails}>
+        <div className="entryCard">
           <h1>Add Details</h1>
           <p htmlFor="title">Title</p>
           <input
@@ -97,17 +88,22 @@ class MoneyManager extends Component {
             onChange={this.changeAmount}
           />
           <br />
-          <p htmlFor="type">Type</p>
-          <select onChange={this.typeDaily}>
-            <option value="Income">Income</option>
-            <option value="Expenses">Expenses</option>
+          <p>Type</p>
+          <select onChange={this.typeDaily} value={typex}>
+            {transactionTypeOptions.map(eachItem => (
+              <option value={eachItem.displayText} id={eachItem.optionId}>
+                {eachItem.displayText}
+              </option>
+            ))}
           </select>
           <button type="submit">ADD</button>
-        </form>
+        </div>
         <ul>
-          <TransactionItem list={list} />
+          {list.map(eachItem => (
+            <TransactionItem eachItem={eachItem} />
+          ))}
         </ul>
-      </div>
+      </form>
     )
   }
 }

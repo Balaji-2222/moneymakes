@@ -25,12 +25,12 @@ const Balance = [
 ]
 
 const MoneyDetails = props => {
-  const {amount, income, expenses, type} = props
+  const {amount, income, expenses, typex} = props
 
   return (
     <div>
       {Balance.map(eachItem => (
-        <li>
+        <li key={eachItem.id}>
           <img src={eachItem.imageUrl} alt="money" />
           <h1>{eachItem.heading}</h1>
           <p>Rs :{eachItem.amount}</p>
